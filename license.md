@@ -1,5 +1,3 @@
-Inexor game source code, any release.
-
 Copyright (C) 2014-2016 Inexor Developers
 
 This software is provided 'as-is', without any express or implied
