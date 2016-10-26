@@ -2,6 +2,12 @@
 #define INEXOR_UI_SDL2_KEYBOARD_HEADER
 
 #include <SDL.h>
+#include <include/cef_base.h>
+
+extern int getKeyboardModifiers(uint16_t const mod);
+extern int getWindowsKeyCode(SDL_Keysym const &key);
+
+extern CefKeyEvent oldkeycode(SDL_Event &e);
 
 #define JSK_BACKSPACE        8
 #define JSK_TAB              9
