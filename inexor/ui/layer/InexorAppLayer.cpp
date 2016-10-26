@@ -11,7 +11,7 @@ namespace layer {
 
 void update_app_layer();
 
-VARFP(showapplayer, 0, 0, 1, update_app_layer());
+VARFP(showapplayer, 0, 1, 1, update_app_layer());
 
 void update_app_layer()
 {

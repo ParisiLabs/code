@@ -2055,16 +2055,18 @@ void gl_drawframe()
     renderedgame = false;
 }
 
+VARP(new_ui, 0, 0, 1);
+
 void gl_drawmainmenu()
 {
     xtravertsva = xtraverts = glde = gbatches = 0;
 
     // TODO: move main menu background to HTML
-    // renderbackground(NULL, NULL, NULL, NULL, true, true);
-    // renderpostfx();
+    renderbackground(NULL, NULL, NULL, NULL, true, true);
+    renderpostfx();
 
-    gl_rendercef();
-    // g3d_render();
+    if(new_ui) gl_rendercef();
+    else g3d_render();
     // TODO: move HUD to HTML
     gl_drawhud();
 }
