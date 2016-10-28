@@ -20,308 +20,370 @@ int getKeyboardModifiers(uint16_t const mod)
     return result;
 }
 
-void convertKeyCode(SDL_Event &e)
+uint16_t convertSDLtoJSKeyCode(uint16_t sdl_keycode, bool shift, bool numlock)
 {
-    SDL_Keysym &key = e.key.keysym; // key symbol in quasi unicode
-    CefKeyEvent cef_event;
-    cef_event.modifiers = getKeyboardModifiers(key.mod);
-
-    cef_event.type = e.key.state==SDL_PRESSED ? KEYEVENT_KEYDOWN : KEYEVENT_KEYUP;
-}
-CefKeyEvent oldkeycode(SDL_Event &e)
-{
-    bool shift = (e.key.keysym.mod & KMOD_SHIFT) || (e.key.keysym.mod & KMOD_RSHIFT);
-    bool ctrl = (e.key.keysym.mod & KMOD_CTRL) || (e.key.keysym.mod & KMOD_RCTRL);
-    bool alt = (e.key.keysym.mod & KMOD_ALT) || (e.key.keysym.mod & KMOD_RALT);
-    bool num_lock = !(e.key.keysym.mod & KMOD_NUM);
-    bool caps_lock = e.key.keysym.mod & KMOD_CAPS;
-    int modifiers = getKeyboardModifiers(e.key.keysym.mod);
-
-    // Output codes
-    int key_code = 0;
-    int char_code = 0;
-    bool is_char = false;
-
-    if(e.type == SDL_TEXTINPUT)
+    if(sdl_keycode >= SDLK_F1 && sdl_keycode <= SDLK_F12)
     {
-     //   spdlog::get("global")->debug() << "text: " << e.text.text << " char[0]: " << (int)e.text.text[0];
-        is_char = true;
-        if(e.text.text[0] >= 32 && e.text.text[0] <= SDLK_z)
-            char_code = e.text.text[0];
+        return JSK_F1 + (sdl_keycode - SDLK_F1);
+    }
+    else switch(sdl_keycode)
+    {
+    case SDLK_LEFTPAREN:
+        /*char_code*/return JSC_PARENTHESES_LEFT;
+        break;
+    case SDLK_RIGHTPAREN:
+        /*char_code*/return JSC_PARENTHESES_RIGHT;
+        break;
+    case SDLK_LEFTBRACKET:
+        /*char_code*/return JSC_BRACKET_LEFT;
+        break;
+    case SDLK_RIGHTBRACKET:
+        /*char_code*/return JSC_BRACKET_RIGHT;
+        break;
+    case '{':
+        /*char_code*/return JSC_BRACE_LEFT;
+        break;
+    case '}':
+        /*char_code*/return JSC_BRACE_RIGHT;
+        break;
+    case SDLK_COMMA:
+        /*char_code*/return JSC_COMMA;
+        break;
+    case SDLK_SEMICOLON:
+        /*char_code*/return JSC_SEMI_COLON;
+        break;
+    case SDLK_MINUS:
+        /*char_code*/return JSC_SUBTRACT;
+        break;
+    case SDLK_UNDERSCORE:
+        /*char_code*/return JSC_UNDERSCORE;
+        break;
+    case SDLK_HASH:
+        /*char_code*/return JSC_HASH;
+        break;
+    case SDLK_QUOTE:
+        /*char_code*/return JSC_SINGLE_QUOTE;
+        break;
+    case SDLK_PLUS:
+        /*char_code*/return JSC_PLUS;
+        break;
+    case SDLK_ASTERISK:
+        /*char_code*/return JSC_ASTERISK;
+        break;
+    case '~': // TODO not found?
+        /*char_code*/return JSC_TILDE;
+        break;
+    case SDLK_QUESTION:
+        /*char_code*/return JSC_QUESTION;
+        break;
+    case SDLK_BACKSLASH:
+        /*char_code*/return JSC_BACK_SLASH;
+        break;
+    case '|':
+        /*char_code*/return JSC_PIPE;
+        break;
+    case SDLK_BACKSPACE:
+        return JSK_BACKSPACE;
+        break;
+    case SDLK_TAB:
+        return JSK_TAB;
+        break;
+    case SDLK_RETURN:
+        return JSK_ENTER;
+        /*char_code*/return JSK_ENTER;
+        break;
+    case SDLK_PAUSE:
+        return JSK_PAUSE;
+        break;
+    case SDLK_SCROLLLOCK:
+        return JSK_SCROLL_LOCK;
+        break;
+    case SDLK_ESCAPE:
+        return JSK_ESCAPE;
+        break;
+    case SDLK_LEFT:
+        return JSK_LEFT_ARROW;
+        break;
+    case SDLK_UP:
+        return JSK_UP_ARROW;
+        break;
+    case SDLK_RIGHT:
+        return JSK_RIGHT_ARROW;
+        break;
+    case SDLK_DOWN:
+        return JSK_DOWN_ARROW;
+        break;
+    case SDLK_HOME:
+        return JSK_HOME;
+        break;
+    case SDLK_END:
+        return JSK_END;
+        break;
+    case SDLK_PAGEUP:
+        return JSK_PAGE_UP;
+        break;
+    case SDLK_PAGEDOWN:
+        return JSK_PAGE_DOWN;
+        break;
+    case SDLK_INSERT:
+        return JSK_INSERT;
+        break;
+    case SDLK_DELETE:
+        return JSK_DELETE;
+        /*char_code*/return JSC_DELETE;
+        break;
+    case SDLK_KP_DIVIDE:
+        return JSK_DIVIDE;
+        /*char_code*/return JSC_NUM_DIVIDE;
+        break;
+    case SDLK_KP_MULTIPLY:
+        return JSK_MULTIPLY;
+        /*char_code*/return JSC_NUM_MULTIPLY;
+        break;
+    case SDLK_KP_MINUS:
+        return JSK_SUBTRACT;
+        /*char_code*/return JSC_NUM_SUBTRACT;
+        break;
+    case SDLK_KP_PLUS:
+        return JSK_ADD;
+        /*char_code*/return JSC_NUM_ADD;
+        break;
+    case SDLK_KP_DECIMAL:
+        if(numlock)
+        {
+            return JSK_DECIMAL_POINT; // keyboard layout dependent!
+            /*char_code*/return JSK_DELETE;
+        }
         else
-            switch(e.text.text[0])
-            {
-            case '(':
-                char_code = JSC_PARENTHESES_LEFT;
-                break;
-            case ')':
-                char_code = JSC_PARENTHESES_RIGHT;
-                break;
-            case '[':
-                char_code = JSC_BRACKET_LEFT;
-                break;
-            case ']':
-                char_code = JSC_BRACKET_RIGHT;
-                break;
-            case '{':
-                char_code = JSC_BRACE_LEFT;
-                break;
-            case '}':
-                char_code = JSC_BRACE_RIGHT;
-                break;
-            case ',':
-                char_code = JSC_COMMA;
-                break;
-            case ';':
-                char_code = JSC_SEMI_COLON;
-                break;
-            case '-':
-                char_code = JSC_SUBTRACT;
-                break;
-            case '_':
-                char_code = JSC_UNDERSCORE;
-                break;
-            case '#':
-                char_code = JSC_HASH;
-                break;
-            case '\'':
-                char_code = JSC_SINGLE_QUOTE;
-                break;
-            case '+':
-                char_code = JSC_PLUS;
-                break;
-            case '*':
-                char_code = JSC_ASTERISK;
-                break;
-            case '~':
-                char_code = JSC_TILDE;
-                break;
-            case '?':
-                char_code = JSC_QUESTION;
-                break;
-            case '\\':
-                char_code = JSC_BACK_SLASH;
-                break;
-            case '|':
-                char_code = JSC_PIPE;
-                break;
-            default:
-                // char_code = e.text.text[0];
-                break;
-            }
-    }
-    else if(e.type == SDL_KEYDOWN || e.type == SDL_KEYUP)
-    {
-        //spdlog::get("global")->debug("type: {0} mod: {1} sym: {2} ({3}) scan: {4} ({5})",
-        //                             e.key.state, e.key.keysym.mod, e.key.keysym.sym,
-        //                             SDL_GetKeyName(e.key.keysym.sym), e.key.keysym.scancode,
-        //                             SDL_GetScancodeName(e.key.keysym.scancode));
-
-        // Function Keys
-        if(e.key.keysym.sym >= _SDLK_F1 && e.key.keysym.sym <= _SDLK_F12)
         {
-            key_code = JSK_F1 + (e.key.keysym.sym - _SDLK_F1);
+            return JSK_DELETE;
         }
-        // Special Keys
-        switch(e.key.keysym.sym)
-        {
-        case SDLK_BACKSPACE:
-            key_code = JSK_BACKSPACE;
-            break;
-        case SDLK_TAB:
-            key_code = JSK_TAB;
-            break;
-        case SDLK_RETURN:
-            is_char = true;
-            key_code = JSK_ENTER;
-            char_code = JSK_ENTER;
-            break;
-        case SDLK_PAUSE:
-            key_code = JSK_PAUSE;
-            break;
-        case _SDLK_SCROLL_LOCK:
-            key_code = JSK_SCROLL_LOCK;
-            break;
-        case SDLK_ESCAPE:
-            key_code = JSK_ESCAPE;
-            break;
-        case SDLK_LEFT:
-            key_code = JSK_LEFT_ARROW;
-            break;
-        case SDLK_UP:
-            key_code = JSK_UP_ARROW;
-            break;
-        case SDLK_RIGHT:
-            key_code = JSK_RIGHT_ARROW;
-            break;
-        case SDLK_DOWN:
-            key_code = JSK_DOWN_ARROW;
-            break;
-        case _SDLK_HOME:
-            key_code = JSK_HOME;
-            break;
-        case _SDLK_END:
-            key_code = JSK_END;
-            break;
-        case _SDLK_PAGEUP:
-            key_code = JSK_PAGE_UP;
-            break;
-        case _SDLK_PAGEDOWN:
-            key_code = JSK_PAGE_DOWN;
-            break;
-        case _SDLK_INSERT:
-            key_code = JSK_INSERT;
-            break;
-        case SDLK_DELETE:
-            is_char = true;
-            key_code = JSK_DELETE;
-            char_code = JSC_DELETE;
-            break;
-        case _SDLK_NUM_DIVIDE:
-            is_char = true;
-            key_code = JSK_DIVIDE;
-            char_code = JSC_NUM_DIVIDE;
-            break;
-        case _SDLK_NUM_MULTIPLY:
-            is_char = true;
-            key_code = JSK_MULTIPLY;
-            char_code = JSC_NUM_MULTIPLY;
-            break;
-        case _SDLK_NUM_SUBTRACT:
-            is_char = true;
-            key_code = JSK_SUBTRACT;
-            char_code = JSC_NUM_SUBTRACT;
-            break;
-        case _SDLK_NUM_ADD:
-            is_char = true;
-            key_code = JSK_ADD;
-            char_code = JSC_NUM_ADD;
-            break;
-        case _SDLK_NUM_DECIMAL:
-            if(num_lock)
-            {
-                is_char = true;
-                key_code = JSK_DECIMAL_POINT; // keyboard layout dependent!
-                char_code = JSK_DELETE;
-            }
-            else
-            {
-                key_code = JSK_DELETE;
-            }
-            break;
-        case _SDLK_KP0:
-            key_code = JSK_INSERT;
-            break;
-        case _SDLK_KP1:
-            key_code = JSK_END;
-            break;
-        case _SDLK_KP2:
-            key_code = JSK_DOWN_ARROW;
-            break;
-        case _SDLK_KP3:
-            key_code = JSK_PAGE_DOWN;
-            break;
-        case _SDLK_KP4:
-            key_code = JSK_LEFT_ARROW;
-            break;
-        case _SDLK_KP5:
-            key_code = JSK_NUM5_SECOND;
-            break;
-        case _SDLK_KP6:
-            key_code = JSK_RIGHT_ARROW;
-            break;
-        case _SDLK_KP7:
-            key_code = JSK_HOME;
-            break;
-        case _SDLK_KP8:
-            key_code = JSK_UP_ARROW;
-            break;
-        case _SDLK_KP9:
-            key_code = JSK_PAGE_UP;
-            break;
-        case _SDLK_CAPS_LOCK:
-            key_code = JSK_CAPS_LOCK;
-            break;
-        case _SDLK_NUM:
-            key_code = JSK_NUM_LOCK;
-            break;
-        case _SDLK_LCTRL:
-        case _SDLK_RCTRL:
-            key_code = JSK_CTRL;
-            break;
-        case _SDLK_LSHIFT:
-        case _SDLK_RSHIFT:
-            key_code = JSK_SHIFT;
-            break;
-        case _SDLK_LALT:
-            key_code = JSK_LEFT_ALT;
-            break;
-        case _SDLK_LMETA:
-            key_code = JSK_LEFT_WIN;
-            break;
-        case _SDLK_RALT:
-            key_code = JSK_RIGHT_ALT;
-            break;
-        case _SDLK_RMETA:
-            key_code = JSK_RIGHT_WIN;
-            break;
-        case _SDLK_SELECT:
-            key_code = JSK_SELECT;
-            break;
-        }
+        break;
+    case SDLK_KP_0:
+        return JSK_INSERT;
+        // /*char_code*/return JSC_ TODO
+        break;
+    case SDLK_KP_1:
+        return JSK_END;
+        break;
+    case SDLK_KP_2:
+        return JSK_DOWN_ARROW;
+        break;
+    case SDLK_KP_3:
+        return JSK_PAGE_DOWN;
+        break;
+    case SDLK_KP_4:
+        return JSK_LEFT_ARROW;
+        break;
+    case SDLK_KP_5:
+        return JSK_NUM5_SECOND;
+        break;
+    case SDLK_KP_6:
+        return JSK_RIGHT_ARROW;
+        break;
+    case SDLK_KP_7:
+        return JSK_HOME;
+        break;
+    case SDLK_KP_8:
+        return JSK_UP_ARROW;
+        break;
+    case SDLK_KP_9:
+        return JSK_PAGE_UP;
+        break;
+    case SDLK_CAPSLOCK:
+        return JSK_CAPS_LOCK;
+        break;
+    case SDLK_NUMLOCKCLEAR:
+        return JSK_NUM_LOCK;
+        break;
+    case SDLK_LCTRL:
+    case SDLK_RCTRL:
+        return JSK_CTRL;
+        break;
+    case SDLK_LSHIFT:
+    case SDLK_RSHIFT:
+        return JSK_SHIFT;
+        break;
+    case SDLK_LALT:
+        return JSK_LEFT_ALT;
+        break;
+    case SDLK_LGUI:
+    case SDLK_APPLICATION:
+        return JSK_LEFT_WIN;
+        break;
+    case SDLK_RGUI:
+        return JSK_RIGHT_WIN;
+        break;
+    case SDLK_RALT:
+        return JSK_RIGHT_ALT;
+        break;
+    case SDLK_SELECT:
+        return JSK_SELECT;
+        break;
+        // missing:
+        /*  case SDLK_SPACE: break;
+        case SDLK_EXCLAIM: break;
+        case SDLK_QUOTEDBL: break;
+        case SDLK_HASH: break;
+        case SDLK_PERCENT: break;
+        case SDLK_DOLLAR: break;
+        case SDLK_AMPERSAND: break;
+        case SDLK_QUOTE: break;
+        case SDLK_LEFTPAREN: break;
+        case SDLK_RIGHTPAREN: break;
+        case SDLK_ASTERISK: break;
+        case SDLK_PLUS: break;
+        case SDLK_COMMA: break;
+        case SDLK_MINUS: break;
+        case SDLK_PERIOD: break;
+        case SDLK_SLASH: break;
+        case SDLK_0: break;
+        case SDLK_1: break;
+        case SDLK_2: break;
+        case SDLK_3: break;
+        case SDLK_4: break;
+        case SDLK_5: break;
+        case SDLK_6: break;
+        case SDLK_7: break;
+        case SDLK_8: break;
+        case SDLK_9: break;
+        case SDLK_COLON: break;
+        case SDLK_SEMICOLON: break;
+        case SDLK_LESS: break;
+        case SDLK_EQUALS: break;
+        case SDLK_GREATER: break;
+        case SDLK_QUESTION: break;
+        case SDLK_AT: break;
+        case SDLK_LEFTBRACKET: break;
+        case SDLK_BACKSLASH: break;
+        case SDLK_RIGHTBRACKET: break;
+        case SDLK_CARET: break;
+        case SDLK_UNDERSCORE: break;
+        case SDLK_BACKQUOTE: break;
+        case SDLK_a: break;
+        case SDLK_b: break;
+        case SDLK_c: break;
+        case SDLK_d: break;
+        case SDLK_e: break;
+        case SDLK_f: break;
+        case SDLK_g: break;
+        case SDLK_h: break;
+        case SDLK_i: break;
+        case SDLK_j: break;
+        case SDLK_k: break;
+        case SDLK_l: break;
+        case SDLK_m: break;
+        case SDLK_n: break;
+        case SDLK_o: break;
+        case SDLK_p: break;
+        case SDLK_q: break;
+        case SDLK_r: break;
+        case SDLK_s: break;
+        case SDLK_t: break;
+        case SDLK_u: break;
+        case SDLK_v: break;
+        case SDLK_w: break;
+        case SDLK_x: break;
+        case SDLK_y: break;
+        case SDLK_z: break;
 
+        case SDLK_PRINTSCREEN: break;
+        case SDLK_KP_ENTER: break;
+        case SDLK_KP_PERIOD: break;
+        case SDLK_POWER: break;
+        case SDLK_KP_EQUALS: break;
+        case SDLK_F13: break;
+        case SDLK_F14: break;
+        case SDLK_F15: break;
+        case SDLK_F16: break;
+        case SDLK_F17: break;
+        case SDLK_F18: break;
+        case SDLK_F19: break;
+        case SDLK_F20: break;
+        case SDLK_F21: break;
+        case SDLK_F22: break;
+        case SDLK_F23: break;
+        case SDLK_F24: break;
+        case SDLK_EXECUTE: break;
+        case SDLK_HELP: break;
+        case SDLK_MENU: break;
+        case SDLK_STOP: break;
+        case SDLK_AGAIN: break;
+        case SDLK_UNDO: break;
+        case SDLK_CUT: break;
+        case SDLK_COPY: break;
+        case SDLK_PASTE: break;
+        case SDLK_FIND: break;
+        case SDLK_MUTE: break;
+        case SDLK_VOLUMEUP: break;
+        case SDLK_VOLUMEDOWN: break;
+        case SDLK_KP_COMMA: break;
+        case SDLK_KP_EQUALSAS400: break;
+
+        case SDLK_ALTERASE: break;
+        case SDLK_SYSREQ: break;
+        case SDLK_CANCEL: break;
+        case SDLK_CLEAR: break;
+        case SDLK_PRIOR: break;
+        case SDLK_RETURN2: break;
+        case SDLK_SEPARATOR: break;
+        case SDLK_OUT: break;
+        case SDLK_OPER: break;
+        case SDLK_CLEARAGAIN: break;
+        case SDLK_CRSEL: break;
+        case SDLK_EXSEL: break;
+
+        case SDLK_KP_00: break;
+        case SDLK_KP_000: break;
+        case SDLK_THOUSANDSSEPARATOR: break;
+        case SDLK_DECIMALSEPARATOR: break;
+        case SDLK_CURRENCYUNIT: break;
+        case SDLK_CURRENCYSUBUNIT: break;
+        case SDLK_KP_LEFTPAREN: break;
+        case SDLK_KP_RIGHTPAREN: break;
+        case SDLK_KP_LEFTBRACE: break;
+        case SDLK_KP_RIGHTBRACE: break;
+        case SDLK_KP_TAB: break;
+        case SDLK_KP_BACKSPACE: break;
+        case SDLK_KP_A: break;
+        case SDLK_KP_B: break;
+        case SDLK_KP_C: break;
+        case SDLK_KP_D: break;
+        case SDLK_KP_E: break;
+        case SDLK_KP_F: break;
+        case SDLK_KP_XOR: break;
+        case SDLK_KP_POWER: break;
+        case SDLK_KP_PERCENT: break;
+        case SDLK_KP_LESS: break;
+        case SDLK_KP_GREATER: break;
+        case SDLK_KP_AMPERSAND: break;
+        case SDLK_KP_DBLAMPERSAND: break;
+        case SDLK_KP_VERTICALBAR: break;
+        case SDLK_KP_DBLVERTICALBAR: break;
+        case SDLK_KP_COLON: break;
+        case SDLK_KP_HASH: break;
+        case SDLK_KP_SPACE: break;
+        case SDLK_KP_AT: break;
+        case SDLK_KP_EXCLAM: break;
+        case SDLK_KP_MEMSTORE: break;
+        case SDLK_KP_MEMRECALL: break;
+        case SDLK_KP_MEMCLEAR: break;
+        case SDLK_KP_MEMADD: break;
+        case SDLK_KP_MEMSUBTRACT: break;
+        case SDLK_KP_MEMMULTIPLY: break;
+        case SDLK_KP_MEMDIVIDE: break;
+        case SDLK_KP_PLUSMINUS: break;
+        case SDLK_KP_CLEAR: break;
+        case SDLK_KP_CLEARENTRY: break;
+        case SDLK_KP_BINARY: break;
+        case SDLK_KP_OCTAL: break;
+        case SDLK_KP_HEXADECIMAL: break;
+
+        case SDLK_MODE: break;*/
     }
 
-    // Still not mapped?
-    if(key_code == 0)
-    {
-        key_code = e.key.keysym.sym;
-    }
-
-    // Fire key events to CEF
-    if(e.key.state == SDL_PRESSED || e.type == SDL_TEXTINPUT)
-    {
-        // onkeydown
-        CefKeyEvent key_event_key_down;
-        key_event_key_down.type = KEYEVENT_KEYDOWN;
-        key_event_key_down.modifiers = modifiers;
-        key_event_key_down.windows_key_code = key_code;
-        return key_event_key_down;
-        //layer_manager->SendKeyEvent(key_event_key_down);
-        // Fire a second key event for characters only
-        if(is_char)
-        {
-            // onkeypress
-            CefKeyEvent key_event_char;
-            key_event_char.type = KEYEVENT_CHAR;
-            key_event_char.modifiers = modifiers;
-            key_event_char.character = char_code;
-            return key_event_char;
-           // layer_manager->SendKeyEvent(key_event_char);
-        }
-    }
-    else if(e.key.state == SDL_RELEASED)
-    {
-        // onkeyup
-        CefKeyEvent key_event_key_up;
-        key_event_key_up.type = KEYEVENT_KEYUP;
-        key_event_key_up.modifiers = modifiers;
-        key_event_key_up.windows_key_code = key_code;
-        return key_event_key_up;
-      //  layer_manager->SendKeyEvent(key_event_key_up);
-    }
-}
-
-void convertKeyCode(const char *input, size_t len)
-{
-    // if(e.type == SDL_TEXTINPUT) convertKeyCode(e.text.text, 32);
-    for(size_t i = 0; i < len; i++)
-    {
-        CefKeyEvent cef_event;
-        cef_event.type = cef_key_event_type_t::KEYEVENT_CHAR;
-        cef_event.character = input[i];
-        // fire event.
-    }
+    // Still not mapped
+    return sdl_keycode;
 }
 
 int getWindowsKeyCode(SDL_Keysym const &key)
@@ -550,3 +612,4 @@ int getWindowsKeyCode(SDL_Keysym const &key)
     }
     return result;
 }
+ // fehlt noch: großbuchstaben
