@@ -6,7 +6,7 @@
 
 extern int getKeyboardModifiers(uint16_t const mod);
 
-extern uint16_t convertSDLtoJSKeyCode(uint16_t sdl_keycode, bool shift = false, bool numlock = false);
+extern uint16_t convertSDLtoJSKeyCode(SDL_Keycode sdl_keycode, bool shift = false, bool numlock = false);
 #define JSK_BACKSPACE        8
 #define JSK_TAB              9
 #define JSK_NUM5_SECOND     12

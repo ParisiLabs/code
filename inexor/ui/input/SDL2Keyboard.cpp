@@ -20,7 +20,7 @@ int getKeyboardModifiers(uint16_t const mod)
     return result;
 }
 
-uint16_t convertSDLtoJSKeyCode(uint16_t sdl_keycode, bool shift, bool numlock)
+uint16_t convertSDLtoJSKeyCode(SDL_Keycode sdl_keycode, bool shift, bool numlock)
 {
     if(sdl_keycode >= SDLK_F1 && sdl_keycode <= SDLK_F12)
     {
@@ -132,19 +132,23 @@ uint16_t convertSDLtoJSKeyCode(uint16_t sdl_keycode, bool shift, bool numlock)
         return JSK_DELETE;
         /*char_code*/return JSC_DELETE;
         break;
-    case SDLK_KP_DIVIDE:
+    case SDLK_KP_DIVIDE:
+
         return JSK_DIVIDE;
         /*char_code*/return JSC_NUM_DIVIDE;
         break;
-    case SDLK_KP_MULTIPLY:
+    case SDLK_KP_MULTIPLY:
+
         return JSK_MULTIPLY;
         /*char_code*/return JSC_NUM_MULTIPLY;
         break;
-    case SDLK_KP_MINUS:
+    case SDLK_KP_MINUS:
+
         return JSK_SUBTRACT;
         /*char_code*/return JSC_NUM_SUBTRACT;
         break;
-    case SDLK_KP_PLUS:
+    case SDLK_KP_PLUS:
+
         return JSK_ADD;
         /*char_code*/return JSC_NUM_ADD;
         break;
