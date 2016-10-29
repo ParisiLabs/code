@@ -32,7 +32,9 @@ void InexorKeyboardManager::SendKeyEvent(SDL_Event &e)
     {
         CefKeyEvent cef_event;
         cef_event.modifiers = getKeyboardModifiers(e.key.keysym.mod);
-        cef_event.windows_key_code = convertSDLtoJSKeyCode(e.key.keysym.sym);
+        uint32_t javascript_keycode = convertSDLtoJSKeyCode(e.key.keysym.sym);
+        cef_event.windows_key_code = javascript_keycode;
+        cef_event.character = javascript_keycode;
 
         cef_event.type = KEYEVENT_RAWKEYDOWN; // or shall we send keydown?
         layer_manager->SendKeyEvent(cef_event);
@@ -50,6 +52,10 @@ void InexorKeyboardManager::SendKeyEvent(SDL_Event &e)
         cef_event.type = KEYEVENT_KEYUP;
         layer_manager->SendKeyEvent(cef_event);
         return;
+    }
+    if(e.type == SDL_TEXTINPUT)
+    {
+        char *text = e.text.text;
     }
 }
 
