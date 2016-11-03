@@ -75,7 +75,7 @@ void InexorKeyboardManager::SendKeyEvent(SDL_Event &e)
     if(e.type == SDL_TEXTINPUT)
     {
         CefKeyEvent cef_event;
-
+//        cef_string_utf8_to_utf16(e.text.text, SDL_TEXTINPUTEVENT_TEXT_SIZE, )
         std::u16string decodedstr(utf8_to_utf16(e.text.text)); //SDL gives us utf8 and CEF has char16. we could also just assign it though (so the highest bits would be nulled).
 
         for(char16_t cha : decodedstr)

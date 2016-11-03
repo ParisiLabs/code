@@ -29,6 +29,7 @@ InputRouter::InputRouter()
       textinputmask(0),
       keyrepeatmask(0)
 {
+    SDL_StartTextInput();
 }
 
 InputRouter::~InputRouter()
@@ -39,20 +40,6 @@ void InputRouter::keyrepeat(bool on, int mask)
 {
     if (on) keyrepeatmask |= mask;
     else keyrepeatmask &= ~mask;
-}
-
-void InputRouter::textinput(bool on, int mask)
-{
-    if (on)
-    {
-        if (!textinputmask) SDL_StartTextInput();
-        textinputmask |= mask;
-    }
-    else
-    {
-        textinputmask &= ~mask;
-        if (!textinputmask) SDL_StopTextInput();
-    }
 }
 
 void InputRouter::inputgrab()
