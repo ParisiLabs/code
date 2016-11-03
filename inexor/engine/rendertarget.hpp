@@ -1,3 +1,6 @@
+#pragma once
+
+#include "inexor/rendering/windowmanagment.hpp"
 using namespace inexor::rendering::screen;
 
 extern SharedVar<int> rtsharefb, rtscissor, blurtile;

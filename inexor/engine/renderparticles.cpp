@@ -3,6 +3,9 @@
 #include "inexor/engine/engine.hpp"
 #include "inexor/engine/rendertarget.hpp"
 #include "inexor/util/Logging.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
+
+using namespace inexor::rendering::screen;
 
 Shader *particleshader = NULL, *particlenotextureshader = NULL;
 

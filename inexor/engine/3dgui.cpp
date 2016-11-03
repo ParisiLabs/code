@@ -6,6 +6,7 @@
 #include "inexor/engine/engine.hpp"
 #include "inexor/engine/textedit.hpp"
 #include "inexor/filesystem/mediadirs.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
 
 using namespace inexor::filesystem;
 using namespace inexor::rendering::screen;

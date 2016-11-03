@@ -4,6 +4,7 @@
 #include "inexor/texture/SDL_loading.hpp"
 #include "inexor/texture/image.hpp"
 #include "inexor/util/Logging.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
 
 void writepngchunk(stream *f, const char *type, uchar *data = NULL, uint len = 0)
 {

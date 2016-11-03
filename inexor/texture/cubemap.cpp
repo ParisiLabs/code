@@ -5,6 +5,7 @@
 #include "inexor/texture/format.hpp"
 #include "inexor/filesystem/mediadirs.hpp"
 #include "inexor/util/Logging.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
 
 void forcecubemapload(GLuint tex)
 {

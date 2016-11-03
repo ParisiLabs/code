@@ -9,6 +9,7 @@
 
 #include "inexor/engine/engine.hpp"
 #include "inexor/util/Logging.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
 
 #include "SDL_mixer.h"
 

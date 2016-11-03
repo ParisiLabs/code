@@ -1,5 +1,6 @@
 #include "inexor/engine/engine.hpp"
 #include "inexor/texture/cubemap.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
 
 VARFP(waterreflect, 0, 1, 1, { cleanreflections(); preloadwatershaders(); });
 VARFP(waterrefract, 0, 1, 1, { cleanreflections(); preloadwatershaders(); });

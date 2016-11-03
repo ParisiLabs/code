@@ -1,5 +1,8 @@
 #include "inexor/engine/engine.hpp"
 #include "inexor/engine/rendertarget.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
+
+using namespace inexor::rendering::screen;
 
 VARP(shadowmap, 0, 0, 1);
 

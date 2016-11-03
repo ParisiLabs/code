@@ -2,6 +2,7 @@
 
 #include "inexor/engine/engine.hpp"
 #include "inexor/util/Logging.hpp"
+#include "inexor/rendering/windowmanagment.hpp"
 
 using namespace inexor::rendering::screen;
 
