@@ -2285,7 +2285,7 @@ void calclight(int *quality)
 {
     if(!setlightmapquality(*quality))
     {
-        spdlog::get("global")->error() << "valid range for calclight quality is -1..1";
+        spdlog::get("global")->error("valid range for calclight quality is -1..1");
         return;
     }
     renderbackground("computing lightmaps... (esc to abort)");
@@ -2324,7 +2324,7 @@ void calclight(int *quality)
     renderbackground("lighting done...");
     allchanged();
     if(calclight_canceled)
-        spdlog::get("edit")->info() << "calclight aborted";
+        spdlog::get("edit")->info("calclight aborted");
     else
         spdlog::get("edit")->info("generated {0} lightmaps using {1}% of {2} textures ({3} seconds)",
                                   total,
@@ -2344,7 +2344,7 @@ void patchlight(int *quality)
     if(noedit(true)) return;
     if(!setlightmapquality(*quality))
     {
-        spdlog::get("global")->error() << "valid range for patchlight quality is -1..1";
+        spdlog::get("global")->error("valid range for patchlight quality is -1..1");
         return;
     }
     renderbackground("patching lightmaps... (esc to abort)");
@@ -2384,7 +2384,7 @@ void patchlight(int *quality)
     renderbackground("lighting done...");
     allchanged();
     if(calclight_canceled)
-        spdlog::get("edit")->info() << "patchlight aborted";
+        spdlog::get("edit")->info("patchlight aborted");
     else
         spdlog::get("edit")->info("patched {0} lightmaps using {1}% of {2} textures ({3} seconds)",
                                   total,
