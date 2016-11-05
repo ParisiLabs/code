@@ -32,12 +32,12 @@ include(cmake/compile_flags_and_defs.cmake)
 # We use a lot of thirdparty dependencies which we deliver in prebuilt form to cut down compile time: make cmake find them.
 include(platform/add_platform_files.cmake)
 
-# And we split them accordingly into different require_XY() functions
-include(cmake/require_thirdparty_libs.cmake)
-
 # Add conan dependencies (conan = c++ dependency manager)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
+
+# And we split them accordingly into different require_XY() functions
+include(cmake/require_thirdparty_libs.cmake)
 
 #### Install paths ####
 
