@@ -9,9 +9,6 @@
   gtest/1.7.0@lasote/stable
   ENet/1.3.13@a_teammate/testing
   spdlog/0.10.0@memsharded/stable
-  SDL2/2.0.4@lasote/stable
-  SDL2_mixer/2.0.1@jmmut/testing
-  SDL2_image/2.0.1@lasote/testing
 
 [options]
   gtest:shared=False
