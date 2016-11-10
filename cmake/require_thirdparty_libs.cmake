@@ -48,7 +48,7 @@ function(require_opengl targ)
     include_directories("${OPENGL_INCLUDE_DIRS}")
   endif()
 
-  target_link_libs(${targ} ${OPENGL_LIBS} ${NOLINK})
+  target_link_libraries${targ} ${OPENGL_LIBS} ${NOLINK})
 endfunction()
 
 set(BOOST_ROOT ${CONAN_BOOST_ROOT})
@@ -125,7 +125,7 @@ function(require_protobuf targ)
 
   add_definitions(-DPROTOBUF_USE_DLLS)
   include_directories(${PROTOBUF_INCLUDE_DIRS})
-  target_link_libs(${targ} ${NOLINK} ${PROTOBUF_LIBRARIES})
+  target_link_libraries${targ} ${NOLINK} ${PROTOBUF_LIBRARIES})
 endfunction()
 
 #### gRPC
@@ -151,7 +151,7 @@ function(require_grpc targ)
   endif()
 
   include_directories(${GRPC_INCLUDE_DIRS} ${GRPCPP_INCLUDE_DIRS})
-  target_link_libs(${targ} ${NOLINK} ${GRPC_LIBRARIES})
+  target_link_libraries${targ} ${NOLINK} ${GRPC_LIBRARIES})
 
   require_protobuf(${targ} ${NOLINK})
 endfunction()
@@ -177,7 +177,7 @@ macro(add_require_conan_lib_function name)
 
     target_compile_definitions(${targ} PUBLIC ${OUR_DEFINITIONS})
     target_include_directories(${targ} PUBLIC ${CONAN_INCLUDE_DIRS_${NAME_UPPER}})
-    target_link_libs(${targ} ${CONAN_LIBS_${NAME_UPPER}} ${NOLINK})
+    target_link_libraries${targ} ${CONAN_LIBS_${NAME_UPPER}} ${NOLINK})
   endfunction()
 endmacro()
 
@@ -216,12 +216,12 @@ function(require_sdl targ)
   endif()
   
 #  if(OS_WINDOWS)
-#    target_link_libs(${targ} winmm ${NOLINK})
+#    target_link_libraries${targ} winmm ${NOLINK})
 #    if(NOT MSVC)
 #      add_definitions(-mwindows) # This is GUI!
 #    endif()
 #  elseif(OS_POSIX)
-#    target_link_libs(${targ} dl rt ${NOLINK})
+#    target_link_libraries${targ} dl rt ${NOLINK})
 #  endif()
   require_sdl2(${targ} ${NOLINK})
   require_sdl2_image(${targ} ${NOLINK})

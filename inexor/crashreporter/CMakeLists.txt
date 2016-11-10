@@ -10,6 +10,6 @@ function(require_crashreporter targ)
   endif()
 
   require_cxx11_abi(${targ} ${NOLINK})
-  target_link_libs(${targ} module_crashreporter ${NOLINK})
+  target_link_libraries${targ} module_crashreporter ${NOLINK})
 
 endfunction()

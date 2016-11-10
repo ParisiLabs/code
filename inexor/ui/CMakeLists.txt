@@ -34,7 +34,7 @@ function(require_ui targ)
   endif()
 
   include_directories(${CEF_INCLUDE_DIRS})
-  target_link_libs(${targ} module_ui ${CEF_LIBS} ${NOLINK})
+  target_link_libraries${targ} module_ui ${CEF_LIBS} ${NOLINK})
 
   require_util(${targ} ${NOLINK})
   require_enet(${targ} ${NOLINK})

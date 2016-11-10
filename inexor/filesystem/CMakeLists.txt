@@ -23,7 +23,7 @@ function(require_filesystem targ)
     set(NOLINK "NOLINK")
   endif()
 
-  target_link_libs(${targ} module_filesystem ${NOLINK}) # Tell the requiring module that it needs to link with our static lib
+  target_link_libraries${targ} module_filesystem ${NOLINK}) # Tell the requiring module that it needs to link with our static lib
 
   # Also tell the other module that it needs our dependencies:
   require_sdl(${targ} ${NOLINK}) # we need sdl since we havent refractored cube.hpp good enough yet

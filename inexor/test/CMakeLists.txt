@@ -11,6 +11,6 @@ require_util(${TEST_BINARY})
 require_gtest(${TEST_BINARY})
 require_cxx11_abi(${TEST_BINARY})
 
-target_link_libs(${TEST_BINARY} ${ADDITIONAL_LIBRARIES})
+target_link_libraries${TEST_BINARY} ${ADDITIONAL_LIBRARIES})
 
 add_custom_target(run_tests COMMAND $<TARGET_FILE:${TEST_BINARY}>)

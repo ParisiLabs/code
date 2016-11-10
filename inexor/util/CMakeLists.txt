@@ -14,7 +14,7 @@ function(require_util targ)
     set(NOLINK "NOLINK")
   endif()
 
-  target_link_libs(${targ} module_util ${NOLINK})
+  target_link_libraries${targ} module_util ${NOLINK})
 
   require_boost_thread(${targ} ${NOLINK})
   require_boost_random(${targ} ${NOLINK})

@@ -10,7 +10,7 @@ function(require_texture targ)
     set(NOLINK "NOLINK")
   endif()
 
-  target_link_libs(${targ} module_texture ${NOLINK})
+  target_link_libraries${targ} module_texture ${NOLINK})
 
   require_sdl(${targ} ${NOLINK})
   require_filesystem(${targ} ${NOLINK})
