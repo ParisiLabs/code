@@ -15,7 +15,6 @@ add_lib(ui)
 require_enet(module_ui)
 require_sdl(module_ui)
 require_util(module_ui)
-require_cxx11_abi(module_ui)
 
 # Configure use of the sandbox.
 option(USE_SANDBOX OFF)
@@ -36,5 +35,4 @@ function(require_ui targ)
   require_util(${targ})
   require_enet(${targ})
   require_sdl(${targ})
-  require_cxx11_abi(${targ})
 endfunction()

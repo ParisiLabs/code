@@ -15,10 +15,7 @@ include(${SOURCE_DIR}/gluegen/require_run_gluegen.cmake)
 
 # @param BUILD_FLAGS see require_run_gluegen
 function(require_rpc targ BUILD_FLAGS)
-  message(STATUS "Configuring ${targ} with module_rpc")
-
   require_grpc(${targ})
-  require_cxx11_abi(${targ})
   require_util(${targ})
 
   # Folder where generated files land: somewhere in the build/ dir.

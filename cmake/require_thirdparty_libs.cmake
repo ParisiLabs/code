@@ -33,7 +33,6 @@ find_package(OpenGL)
 
 set(OPENGL_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR} CACHE INTERNAL "")
 set(OPENGL_LIBS ${OPENGL_gl_LIBRARY} CACHE INTERNAL "")
-register_possible_dependency(${OPENGL_LIBs})
 
 function(require_opengl targ)
   message(STATUS "Configuring ${targ} with OpenGL (${OPENGL_LIBS})")
@@ -102,8 +101,6 @@ add_require_boost_lib_function(program_options)
 find_libs(PROTOBUF_LIBRARIES protobuf)
 find_path(PROTOBUF_INCLUDE_DIRS google/protobuf/service.h)
 
-register_possible_dependency(${PROTOBUF_LIBRARIES})
-
 if (NOT DEFINED PROTOC_EXE)
   find_program(PROTOC_EXE protoc NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH )
   # grpc and protoc make problems if versions arent matching.
@@ -124,9 +121,6 @@ endfunction()
 find_libs(GRPC_LIBRARIES gpr LIB grpc_unsecure LIB grpc++_unsecure)
 find_path(GRPC_INCLUDE_DIRS grpc/grpc.h)
 find_path(GRPCPP_INCLUDE_DIRS grpc++/grpc++.h)
-
-
-register_possible_dependency(${GRPC_LIBRARIES})
 
 if (NOT DEFINED GRPC_EXE)
   find_program(GRPC_EXE grpc_cpp_plugin NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH )
