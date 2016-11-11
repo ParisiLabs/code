@@ -12,7 +12,7 @@ add_lib(filesystem)          # Our module is **a static lib** which gets linked 
 require_sdl(module_filesystem)
 require_boost_filesystem(module_filesystem)
 require_rapidjson(module_filesystem)
-require_util(module_filesystem
+require_util(module_filesystem)
 
 # This function is used to bind this module into another module/application
 function(require_filesystem targ)
