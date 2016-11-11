@@ -41,7 +41,7 @@ function(require_opengl targ)
     include_directories("${OPENGL_INCLUDE_DIRS}")
   endif()
 
-  target_link_libraries${targ} ${OPENGL_LIBS})
+  target_link_libraries(${targ} ${OPENGL_LIBS})
 endfunction()
 
 set(BOOST_ROOT ${CONAN_BOOST_ROOT})
@@ -74,27 +74,30 @@ find_package(Boost REQUIRED
 )
 
 # This macro lets us create a require_boost_XY for all other libs. name is the canonical name without spaces, e.g. "program_options"
-# additional defines can be listed, but WITHOUT "-D"
-macro(add_require_boost_lib_function name)
-  function(require_boost_${name} targ)
-    message(STATUS "Configuring ${targ} with library Boost ${name}")
-    if (";${ARGN};" MATCHES ";NOLINK;")
-      set(NOLINK "NOLINK")
-    endif()
+# additional defines can be listed, but WITHOUT "-D" and in quotes, followed by additional **boost lib requirements** e.g. "system thread"
+macro(add_require_boost_lib_function name defines requirements)
+  function(require_boost_${name} TARG)
+    message(STATUS "Configuring ${TARG} with library Boost ${name}")
 
     string(TOUPPER ${name} NAME_UPPER) # we want PROGRAM_OPTIONS as variable
 
-    target_compile_definitions(${targ} PUBLIC ${CONAN_DEFINES_BOOST} ${ARGN})
-    target_include_directories(${targ} PUBLIC ${Boost_INCLUDE_DIRS})
-    target_link_libs(${targ} ${Boost_${NAME_UPPER}_LIBRARY} ${NOLINK})
+    string(REPLACE " " ";" DEFINES_LIST "${defines}") # string to list
+    string(REPLACE " " ";" REQUIREMENTS_LIST "${requirements}") # string to list, we just add those libs
+    target_compile_definitions(${TARG} PUBLIC ${CONAN_DEFINES_BOOST} ${defines})
+    target_include_directories(${TARG} PUBLIC ${Boost_INCLUDE_DIRS})
+    target_link_libraries(${TARG} ${Boost_${NAME_UPPER}_LIBRARY})
+    foreach(REQ ${REQUIREMENTS_LIST})
+      string(TOUPPER ${REQ} REQ_UPPER)
+      target_link_libraries(${TARG} ${Boost_${REQ_UPPER}_LIBRARY})
+    endforeach()
   endfunction()
 endmacro()
 
-add_require_boost_lib_function(random) # dependency on boost system actually
-add_require_boost_lib_function(filesystem BOOST_FILESYSTEM_NO_DEPRECATED) # same
-add_require_boost_lib_function(thread BOOST_THREAD_LIB)
-add_require_boost_lib_function(regex)
-add_require_boost_lib_function(program_options)
+add_require_boost_lib_function(random "" "system")
+add_require_boost_lib_function(filesystem "BOOST_FILESYSTEM_NO_DEPRECATED" "system")
+add_require_boost_lib_function(thread "BOOST_THREAD_LIB" "")
+add_require_boost_lib_function(regex "" "")
+add_require_boost_lib_function(program_options "" "")
 
 #### Protobuf
 
@@ -113,7 +116,7 @@ function(require_protobuf targ)
 
   add_definitions(-DPROTOBUF_USE_DLLS)
   include_directories(${PROTOBUF_INCLUDE_DIRS})
-  target_link_libraries${targ} ${PROTOBUF_LIBRARIES})
+  target_link_libraries(${targ} ${PROTOBUF_LIBRARIES})
 endfunction()
 
 #### gRPC
@@ -133,7 +136,7 @@ function(require_grpc targ)
   message(STATUS "Configuring ${targ} with gRPC")
 
   include_directories(${GRPC_INCLUDE_DIRS} ${GRPCPP_INCLUDE_DIRS})
-  target_link_libraries${targ} ${GRPC_LIBRARIES})
+  target_link_libraries(${targ} ${GRPC_LIBRARIES})
 
   require_protobuf(${targ})
 endfunction()
@@ -156,7 +159,7 @@ macro(add_require_conan_lib_function name)
 
     target_compile_definitions(${targ} PUBLIC ${OUR_DEFINITIONS})
     target_include_directories(${targ} PUBLIC ${CONAN_INCLUDE_DIRS_${NAME_UPPER}})
-    target_link_libraries${targ} ${CONAN_LIBS_${NAME_UPPER}})
+    target_link_libraries(${targ} ${CONAN_LIBS_${NAME_UPPER}})
   endfunction()
 endmacro()
 
@@ -192,12 +195,12 @@ function(require_sdl targ)
   message(STATUS "Configuring ${targ} with SDL")
   
 #  if(OS_WINDOWS)
-#    target_link_libraries${targ} winmm)
+#    target_link_libraries(${targ} winmm)
 #    if(NOT MSVC)
 #      add_definitions(-mwindows) # This is GUI!
 #    endif()
 #  elseif(OS_POSIX)
-#    target_link_libraries${targ} dl rt)
+#    target_link_libraries(${targ} dl rt)
 #  endif()
   require_sdl2(${targ})
   require_sdl2_image(${targ})
