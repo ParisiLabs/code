@@ -70,9 +70,9 @@ static inline int bitscan(uint mask)
 #endif
 #endif
 
-INEXOR_FUNCTION_ALIAS(rnd, inexor::util::rnd<int>);
-INEXOR_FUNCTION_ALIAS(rndscale, inexor::util::rnd<float>);
-INEXOR_FUNCTION_ALIAS(detrnd, inexor::util::deterministic_rnd<int>);
+#define rnd inexor::util::rnd<int>
+#define rndscale inexor::util::rnd<float>
+#define detrnd inexor::util::deterministic_rnd<int>
 
 /// "for"-loop macro definitions
 /// DEPRECATED: Use c++ range based loops instead
