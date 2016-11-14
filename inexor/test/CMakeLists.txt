@@ -10,6 +10,6 @@ add_app(${TEST_BINARY} ${TEST_MODULE_SOURCES} CONSOLE_APP)
 require_util(${TEST_BINARY})
 require_gtest(${TEST_BINARY})
 
-target_link_libraries${TEST_BINARY} ${ADDITIONAL_LIBRARIES})
+target_link_libraries(${TEST_BINARY} ${ADDITIONAL_LIBRARIES})
 
 add_custom_target(run_tests COMMAND $<TARGET_FILE:${TEST_BINARY}>)

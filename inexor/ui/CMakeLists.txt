@@ -30,7 +30,7 @@ function(require_ui targ)
   message(STATUS "Configuring ${targ} with module_ui")
 
   include_directories(${CEF_INCLUDE_DIRS})
-  target_link_libraries${targ} module_ui ${CEF_LIBS})
+  target_link_libraries(${targ} module_ui ${CEF_LIBS})
 
   require_util(${targ})
   require_enet(${targ})

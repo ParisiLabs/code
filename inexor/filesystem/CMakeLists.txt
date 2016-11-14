@@ -17,7 +17,7 @@ require_util(module_filesystem
 # This function is used to bind this module into another module/application
 function(require_filesystem targ)
   message(STATUS "Configuring ${targ} with module_filesystem")
-  target_link_libraries${targ} module_filesystem) # Tell the requiring module that it needs to link with our static lib
+  target_link_libraries(${targ} module_filesystem) # Tell the requiring module that it needs to link with our static lib
 
   # Also tell the other module that it needs our dependencies:
   require_sdl(${targ}) # we need sdl since we havent refractored cube.hpp good enough yet

@@ -9,8 +9,6 @@ find_path(MUSTACHE_INCLUDE_DIR kainjow/mustache.hpp)
 declare_module(gluegen .)
 add_app(gluecodegenerator ${GLUEGEN_MODULE_SOURCES} CONSOLE_APP)
 
-target_link_librariesgluecodegenerator ${LLVM_LIBS})
-
 require_boost_program_options(gluecodegenerator)
 require_boost_regex(gluecodegenerator)
 require_threads(gluecodegenerator)
